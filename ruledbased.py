@@ -5,6 +5,7 @@ import csv
 df = pd.read_csv('qna.csv', encoding='cp949')
 df = df.fillna('0')
 df['results'] = df['result1']+df['result2']+df['result3']
+df = df.drop(['result1', 'result2', 'result3'], axis=1)
 # print(df)
 df.to_csv('qqnnaa.csv', encoding='cp949')
 result_list = []
