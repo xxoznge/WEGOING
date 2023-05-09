@@ -24,10 +24,10 @@ bb = [x for x in b if x != 0]
 cc = [x for x in c if x != 0]
 dd = [x for x in d if x != 0]
 
-df['answer'].replace(aa,'a',inplace=False)
-df['answer'].replace(bb,'b',inplace=False)
-df['answer'].replace(cc,'c',inplace=False)
-df['answer'].replace(dd,'d',inplace=False)
+df['answer'].replace(aa,'a',inplace=True)
+df['answer'].replace(bb,'b',inplace=True)
+df['answer'].replace(cc,'c',inplace=True)
+df['answer'].replace(dd,'d',inplace=True)
 
 # print(df)
 # df.to_csv('qqnnaa.csv', encoding='cp949')
@@ -36,23 +36,24 @@ df['answer'].replace(dd,'d',inplace=False)
 ch = pd.read_csv('choose.csv',encoding='cp949')
 #print(ch)
 # 필요한 리스트 생성
-result_list = []
+result_list = ['ㄱ']*13
 
-def question(q_num): # 규칙기반알고리즘
+def question(q_num): # 알고리즘
     num = q_num*4 # 행 인덱스
     ques = df[num:num+4] # 관련 질문 행 4개
 
     if ch['choose'][q_num] == df['answer'][num]:
-        result_list[q_num] = df['resluts']
+        result_list[q_num] = df['results'][num]
     elif ch['choose'][q_num] == df['answer'][num+1]:
-        result_list[q_num] = df['resluts']
+        result_list[q_num] = df['results'][num]
     elif ch['choose'][q_num] == df['answer'][num+2]:
-        result_list[q_num] = df['resluts']
+        result_list[q_num] = df['results'][num]
     elif ch['choose'][q_num] == df['answer'][num+3]:
-        result_list[q_num] = df['resluts']
+        result_list[q_num] = df['results'][num]
     
-    print(ch['choose'][q_num])
+for i in range(0,13):
+    question(i)
 
-hello = question(0)
+result_L = [i.replace('0', '').strip(', ') for i in result_list]
 
-
+print(result_L)
