@@ -58,5 +58,9 @@ def question(q_num): # 알고리즘
 for i in range(0,13):
     question(i)
 result_L = [i.replace('0', '').strip(', ') for i in result_list]
+# 결과를 하나하나 분리
+resultt = [elem for sublst in result_L for elem in sublst.split(", ")]
 
 #뭐가 필요하냐면 비율 따져서 결과 도출하는거
+counted = Counter(resultt)
+print(counted)
