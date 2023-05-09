@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import csv
+from collections import Counter
 
 #데이터 전처리
 df = pd.read_csv('qna.csv', encoding='cp949')
@@ -23,6 +24,8 @@ aa = [x for x in a if x != 0]
 bb = [x for x in b if x != 0]
 cc = [x for x in c if x != 0]
 dd = [x for x in d if x != 0]
+
+df['answers'] = df['answer']    #필요한가...?
 
 df['answer'].replace(aa,'a',inplace=True)
 df['answer'].replace(bb,'b',inplace=True)
@@ -50,10 +53,10 @@ def question(q_num): # 알고리즘
         result_list[q_num] = df['results'][num]
     elif ch['choose'][q_num] == df['answer'][num+3]:
         result_list[q_num] = df['results'][num]
-    
+
+# 결과 리스트 
 for i in range(0,13):
     question(i)
-
 result_L = [i.replace('0', '').strip(', ') for i in result_list]
 
-print(result_L)
+#뭐가 필요하냐면 비율 따져서 결과 도출하는거
