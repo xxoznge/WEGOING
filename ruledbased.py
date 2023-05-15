@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import csv
 from collections import Counter
 
 #데이터 전처리
@@ -39,7 +38,8 @@ df['answer'].replace(dd,'d',inplace=True)
 ch = pd.read_csv('choose.csv',encoding='cp949')
 #print(ch)
 # 필요한 리스트 생성
-result_list = ['ㄱ']*13
+result_list = ['0']*13
+resultt = ['0']*13
 
 def question(q_num): # 알고리즘
     num = q_num*4 # 행 인덱스
@@ -57,8 +57,8 @@ def question(q_num): # 알고리즘
 # 결과 리스트 
 for i in range(0,13):
     question(i)
-result_L = [i.replace('0', '').strip(', ') for i in result_list]
-# 결과를 하나하나 분리
+    result_L = [i.replace('0', '').strip(', ') for i in result_list]
+    # 결과를 하나하나 분리
 resultt = [elem for sublst in result_L for elem in sublst.split(", ")]
 
 #뭐가 필요하냐면 비율 따져서 결과 도출하는거
