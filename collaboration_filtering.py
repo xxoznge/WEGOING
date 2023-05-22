@@ -1,9 +1,4 @@
-import random
 import pandas as pd
-import statistics
-import matplotlib.pyplot as plt
-from sklearn.metrics.pairwise import cosine_similarity
-import operator
 
 from like_input import * 
 
@@ -28,5 +23,5 @@ for i in range(len(places)):
 
 print(same_type)
 ## 일단은 나라만 비교... 도시도 추천 나와야하나?!?!?!?!
-# sa_li = same_type[~same_type['country'].isin(like['liked_country'])]
-# print(sa_li)
+sa_li = same_type[~same_type['country'].isin(like['liked_country'])]
+print(sa_li)
