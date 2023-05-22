@@ -8,9 +8,6 @@ def like_input(num):
     for i in range(0,1):
         user = input("당신의 별명을 알려주세요 ")
         types = input("당신의 여행 성향은 무엇인가요? ")
-        country = 0
-        city = 0
-        like = pd.concat([like, pd.DataFrame({'user_id': [user], 'type': [types], 'country': [country], 'city': [city]})], ignore_index=True)
         for j in range(num):
             user_id = user
             typess = types

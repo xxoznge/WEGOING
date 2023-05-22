@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
+from to_abcd import *
+
 #데이터 전처리
 df = pd.read_csv('qna.csv', encoding='cp949')
 df = df.fillna('0')
@@ -9,27 +11,7 @@ df['results'] = df['result1'] + ', ' + df['result2'] + ', ' + df['result3']
 df = df.drop(['result1', 'result2', 'result3'], axis=1)
 
 #답변을 abcd로 바꾸기
-a=[0]*(len(df))
-b=[0]*(len(df))
-c=[0]*(len(df))
-d=[0]*(len(df))
-for i in range(0, len(df),4):
-    a[i]=df['answer'][i]
-    b[i]=df['answer'][i+1]
-    c[i]=df['answer'][i+2]
-    d[i]=df['answer'][i+3]
-
-aa = [x for x in a if x != 0]
-bb = [x for x in b if x != 0]
-cc = [x for x in c if x != 0]
-dd = [x for x in d if x != 0]
-
-df['answers'] = df['answer']    #필요한가...?
-
-df['answer'].replace(aa,'a',inplace=True)
-df['answer'].replace(bb,'b',inplace=True)
-df['answer'].replace(cc,'c',inplace=True)
-df['answer'].replace(dd,'d',inplace=True)
+abcd()
 
 # print(df)
 # df.to_csv('qqnnaa.csv', encoding='cp949')
