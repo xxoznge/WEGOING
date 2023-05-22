@@ -14,4 +14,8 @@ def like_input(num):
             country = input("좋았던 나라는 어디인가요? ")
             city = input("어떤 도시를 여행했나요? ")
 
-            like = pd.concat([like, pd.DataFrame({'user_id': [user_id], 'type': [typess], 'country': [country], 'city': [city]})], ignore_index=True)
+            liked = pd.concat([like, pd.DataFrame({'user_id': [user_id], 'type': [typess], 'country': [country], 'city': [city]})], ignore_index=True)
+
+            return liked
+
+like_input(2)
