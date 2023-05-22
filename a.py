@@ -19,6 +19,17 @@ for i in range(0,1):
 
             liked = pd.concat([like, pd.DataFrame({'type': [typess], 'country': [country], 'city': [city]})], ignore_index=True)
 
-## 여행지 리스트 전처리
-## 비슷한 성향의 유저 찾기 - 코사인 유사도
-## 예측 모델 생성 - 추천
+
+
+same_type = pd.DataFrame(columns=['country', 'city'])
+for i in range(len(places)):
+   if places['type'][i] == liked['type'][0]:
+       country = places['liked_country'][i]
+       city = places['liked_city'][i]
+       same_type = pd.concat([same_type, pd.DataFrame({'country': [country], 'city': [city]})], ignore_index=True)
+
+print(same_type)
+## 일단은 나라만 비교... 도시도 추천 나와야하나?!?!?!?!
+missing_values = same_type[~same_type['country'].isin(liked['country'])]
+print("missing_values")
+print(missing_values)
