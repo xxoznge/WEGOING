@@ -1,4 +1,4 @@
-user_id,type,liked_country,liked_city
+user_id,type,country,city
 candy,문화 체험형,일본,교토
 banana,문화 체험형,이탈리아,로마
 banana,휴양형,미국,하와이
