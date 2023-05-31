@@ -4,20 +4,20 @@ import pandas as pd
 ## 나랑 유사한 사용차 찾기
 ## 리스트 비교 후 없는 내용 출력
 
-like = pd.read_csv('ilike.csv', encoding='cp949')
+user = pd.DataFrame()
 places = pd.read_csv('places.csv', encoding='cp949')
 
+# 사용자가 추천하는 여행지 입력받기
+name = input("당신의 별명을 알려주세요 ")
 str_num = input("몇 개의 여행지 추천을 하나요?? ")
 num = int(str_num)
+types = input("당신의 여행 성향은 무엇인가요? ")
 
-for i in range(0,1):
-        types = input("당신의 여행 성향은 무엇인가요? ")
-        for j in range(num):
-            typess = types
-            country = input("좋았던 나라는 어디인가요? ")
-            city = input("어떤 도시를 여행했나요? ")
+for i in range(num):
+    country = input("좋았던 나라는 어디인가요? ")
+    city = input("어떤 도시를 여행했나요? ")
 
-            liked = pd.concat([like, pd.DataFrame({'type': [typess], 'country': [country], 'city': [city]})], ignore_index=True)
+    user = pd.concat([user, pd.DataFrame({'user_id' : [name], 'type': [types], 'country': [country], 'city': [city]})], ignore_index=True)
 
 
 
