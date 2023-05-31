@@ -19,6 +19,8 @@ for i in range(num):
 
     user = pd.concat([user, pd.DataFrame({'user_id' : [name], 'type': [types], 'country': [country], 'city': [city]})], ignore_index=True)
 
+user.to_csv("user_input.csv", encoding='cp949')
+
 
 
 same_type = pd.DataFrame(columns=['country', 'city'])
