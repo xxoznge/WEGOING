@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-from to_abcd import *
+from category_mapping import *
 
 #데이터 전처리
 df = pd.read_csv('qna.csv', encoding='cp949')
