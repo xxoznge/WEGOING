@@ -30,4 +30,4 @@ def recommend_travel_list(df, 여행지, top =2):
 
   return result
 
-print(recommend_travel_list(data, 여행지='알래스카'))
+print(recommend_travel_list(data, 여행지='아이슬란드'))
