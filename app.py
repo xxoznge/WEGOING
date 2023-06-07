@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, json
 import pandas as pd
 import ast as ast
 from sklearn.feature_extraction.text import CountVectorizer
@@ -8,13 +8,13 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def process_data():
-    data1 = request.json.get("data")
-    print(data1)
+    dataAll = request.json.get("data")
+    print(dataAll)
 
-    # 여행지 이름만 빼기
-
-
-
+    # 여행지 이름만 추출하기
+    dataNeed = (dataAll["travelPastName"])
+    print(dataNeed)
+    
     travel = pd.read_csv('Travel.csv', encoding='UTF-8')
 
     # 컬럼 추출 (관광 자원, 여행지)
@@ -32,10 +32,10 @@ def process_data():
        result = df.iloc[sim_index]
        return result
     
-    output= recommend_travel_list(data, 여행지=data1)
-    print(여행지=data1)
+    output= recommend_travel_list(data, 여행지=dataNeed)
+    
     json_output=output.to_json(orient='records')
-    print(output)
+    print(json_output)
 
     return jsonify(json_output)
 
