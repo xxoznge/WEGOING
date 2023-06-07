@@ -11,7 +11,12 @@ def process_data():
     data1 = request.json.get("data")
     print(data1)
 
+    # 여행지 이름만 빼기
+
+
+
     travel = pd.read_csv('Travel.csv', encoding='UTF-8')
+
     # 컬럼 추출 (관광 자원, 여행지)
     data =travel[['관광 자원', '여행지']]
     data[['관광 자원','여행지']].head()
@@ -28,7 +33,7 @@ def process_data():
        return result
     
     output= recommend_travel_list(data, 여행지=data1)
-    print(data)
+    print(여행지=data1)
     json_output=output.to_json(orient='records')
     print(output)
 
