@@ -22,6 +22,10 @@ def process_data():
     df = df.drop(['result1', 'result2', 'result3'], axis=1)
 
     #답변을 abcd로 바꾸기
+    a=[0]*(len(qna))
+    b=[0]*(len(qna))
+    c=[0]*(len(qna))
+    d=[0]*(len(qna))
     abcd()
 
     #사용자가 선택한 내용을 저장한 csv
