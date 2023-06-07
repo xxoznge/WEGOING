@@ -1,8 +1,0 @@
-,user_id,type,country,city,counts,EncodedCategory,c_to_n,n_to_c
-0,candy,문화 체험형,일본,교토,3.0,1,0,0
-1,banana,문화 체험형,이탈리아,로마,3.0,1,1,1
-2,banana,휴양형,미국,하와이,2.0,2,2,2
-3,anna,음식 여행형,태국,치앙마이,5.0,3,3,3
-4,anna,휴양형,인도네시아,발리,2.0,2,4,4
-5,chocolate,휴양형,태국,코사무이,3.0,2,3,3
-6,chocolate,음식 여행형,이탈리아,밀라노,3.0,3,1,1
