@@ -111,8 +111,6 @@ def get_similar_users():
     place, user = preprocess_data()
     
     similar_users = find_similar_users(user, place, k)
-    print("places.index\n",place.index)
-    print("similar_users\n",similar_users)
 
     # user_countries = places.loc[similar_users, 'country'].tolist()
     # user_cities = places.loc[similar_users, 'city'].tolist()
