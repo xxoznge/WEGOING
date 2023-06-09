@@ -28,41 +28,56 @@ def submit_user_input():
                 city = item.get('city')
 
                 user = pd.concat([user, pd.DataFrame({'user_id': [name], 'type': [types], 'country': [country], 'city': [city]})], ignore_index=True)
-        else:
-            # 예외 처리: 문자열인 경우 처리하지 않고 다음 반복으로 넘어감
-            continue
+            else:
+                # 예외 처리: 문자열인 경우 처리하지 않고 다음 반복으로 넘어감
+                continue
 
     # 생성된 데이터프레임 확인
     print(user)
 
     # 데이터프레임을 CSV 파일로 저장
     user.to_csv('user_input.csv', encoding='cp949', index=False)
-
+    # return jsonify({'message': 'User input submitted successfully', 'data': user.to_json()})
     return jsonify({'message': 'User input submitted successfully'})
 
 def preprocess_data():
     places = pd.read_csv('places.csv', encoding='cp949')
     user = pd.read_csv('user_input.csv', encoding='cp949')
-
+    # A에만 있는 행 추출
+    df_only_A = user[~user['city'].isin(places['city'])]
+    # B에 A에만 있는 행 추가
+    place = pd.concat([places, df_only_A], ignore_index=True)
+    
     # 중복 행 개수 계산
     column = ['country', 'city']
-    duplicates = places.duplicated(subset=column)
-    counts = places[duplicates].groupby(['country', 'city']).size() + 1
+    duplicates = place.duplicated(subset=column)
+    counts = place[duplicates].groupby(['country', 'city']).size() + 1
 
     # 중복 행 삭제
-    places.drop_duplicates(subset=column, keep='first', inplace=True)
-    places.rename(columns={'Unnamed: 4': 'counts'}, inplace=True)
+    place.drop_duplicates(subset=column, keep='first', inplace=True)
+    place.rename(columns={'Unnamed: 4': 'counts'}, inplace=True)
 
-    # 카테고리를 숫자로 변환
+    # 카테고리를 숫자로 변환 - places
     categories = ['모험가형', '문화 체험형', '휴양형', '음식 여행형', '자유 여행형', '문화 예술형']
-    places['EncodedCategory'] = pd.factorize(places['type'])[0] + 1
+    place['EncodedCategory'] = pd.factorize(place['type'])[0] + 1
 
-    # 나라를 숫자로 변환
-    places['c_to_n'] = pd.factorize(places['country'])[0]
-    factorized_values = pd.factorize(places['c_to_n'])[0]
-    unique_categories = places['country']
+    # 나라를 숫자로 변환 - places
+    place['c_to_n'] = pd.factorize(place['country'])[0]
+    factorized_values = pd.factorize(place['c_to_n'])[0]
+    unique_categories = place['country']
     converted_values = [unique_categories[index] for index in factorized_values]
-    places['n_to_c'] = converted_values
+    place['n_to_c'] = converted_values
+    
+    # 카테고리를 숫자로 변환 - user
+    user['EncodedCategory'] = pd.factorize(user['type'])[0] + 1
+
+    # 나라를 숫자로 변환 - user
+    user['c_to_n'] = pd.factorize(user['country'])[0]
+    factorized_values = pd.factorize(user['c_to_n'])[0]
+    unique_categories = user['country']
+    converted_values = [unique_categories[index] for index in factorized_values]
+    user['n_to_c'] = converted_values
+    print(user)
 
     return places, user
 
@@ -71,33 +86,39 @@ def find_similar_users(user_matrix, place_matrix, k):
     user = user_matrix
     other_users = place_matrix
 
-    u_vec = user[['EncodedCategory', 'c_to_n']].values
-    o_vec = other_users[['EncodedCategory', 'c_to_n']].values
+    u_country = user['country'].iloc[0]
+    u_city = user['city'].iloc[0]
 
-    similarities = cosine_similarity(u_vec, o_vec)[0].tolist()
-    other_users_list = other_users.index.tolist()
+    similarities = []
+    for index, row in other_users.iterrows():
+        o_country = row['country']
+        o_city = row['city']
+        similarity = 1 if u_country == o_country and u_city == o_city else 0
+        similarities.append(similarity)
 
-    user_similarity = dict(zip(other_users_list, similarities))
-    user_similarity_sorted = sorted(user_similarity.items(), key=operator.itemgetter(1), reverse=True)
+    other_users['similarity'] = similarities
+    top_users = other_users.sort_values('similarity', ascending=False).head(k)
 
-    top_users_similarities = user_similarity_sorted[:k]
-    users = [i[0] for i in top_users_similarities]
+    user_countries = top_users['country'].tolist()
+    user_cities = top_users['city'].tolist()
 
-    converted_values = place_matrix['n_to_c'].tolist()
-    converted_list = [converted_values[index] for index in users]
-
-    return converted_list
+    return user_countries, user_cities
 
 @app3.route('/get_similar_users', methods=['POST'])
 def get_similar_users():
     data = request.json
-    user_id = data.get('user_id')
     k = data.get('k')
+    place, user = preprocess_data()
+    
+    similar_users = find_similar_users(user, place, k)
+    print("places.index\n",place.index)
+    print("similar_users\n",similar_users)
 
-    places, user = preprocess_data()
-    similar_users = find_similar_users(user, places, k)
+    # user_countries = places.loc[similar_users, 'country'].tolist()
+    # user_cities = places.loc[similar_users, 'city'].tolist()
 
-    return jsonify({'similar_users': similar_users})
+    return jsonify({'message': 'User input submitted successfully'})
+    # return jsonify({'user_countries': user_countries, 'user_cities': user_cities})
 
 if __name__ == '__main__':
     app3.run()

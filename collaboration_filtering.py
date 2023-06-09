@@ -11,24 +11,6 @@ from category_mapping import *
 user = pd.DataFrame()
 places = pd.read_csv('places.csv', encoding='cp949')
 
-def cate_to_num(DataFrame):
-    categories = ['모험가형', '문화 체험형', '휴양형', '음식 여행형', '자유 여행형', '문화 예술형']
-    DataFrame['EncodedCategory'] = pd.factorize(DataFrame['type'])[0] + 1
-def num_to_country(DataFrame):
-    cate_to_num(DataFrame)
-    DataFrame['c_to_n'] = pd.factorize(DataFrame['country'])[0]
-    factorized_values = pd.factorize(DataFrame['c_to_n'])[0]
-    #unique_categories = pd.factorize(DataFrame['c_to_n'])[1]
-    unique_categories = DataFrame['country']
-    # 숫자를 문자열로 변환
-    converted_values = [unique_categories[index] for index in factorized_values]
-    # 결과를 새로운 열로 추가
-    DataFrame['n_to_c'] = converted_values
-
-    # print(DataFrame['n_to_c'])
-    return DataFrame
-
-
 # 사용자가 추천하는 여행지 입력받기
 name = input("당신의 별명을 알려주세요 ")
 str_num = input("몇 개의 여행지 추천을 하나요?? ")
@@ -44,24 +26,38 @@ for i in range(num):
 user.to_csv("user_input.csv", encoding='cp949')
 
 ## 여행지 리스트 전처리
+# A에만 있는 행 추출
+df_only_A = user[~user['city'].isin(places['city'])]
+# B에 A에만 있는 행 추가
+place = pd.concat([places, df_only_A], ignore_index=True)
+
 # 중복 행 개수 계산
 column = ['country', 'city']
-column_values = places[column].values.tolist()
-duplicates = places.duplicated(subset=column)
-counts = places[duplicates].groupby(['country', 'city']).size() + 1
+column_values = place[column].values.tolist()
+duplicates = place.duplicated(subset=column)
+counts = place[duplicates].groupby(['country', 'city']).size() + 1
 
 # 중복 행 삭제
-places.drop_duplicates(subset=column, keep='first', inplace=True)
+place.drop_duplicates(subset=column, keep='first', inplace=True)
+place.rename(columns={'Unnamed: 4' : 'counts'}, inplace=True)
 
-places.rename(columns={'Unnamed: 4' : 'counts'}, inplace=True)
+def cate_to_num(DataFrame):
+    categories = ['모험가형', '문화 체험형', '휴양형', '음식 여행형', '자유 여행형', '문화 예술형']
+    DataFrame['EncodedCategory'] = pd.factorize(DataFrame['type'])[0] + 1
+def num_to_country(DataFrame):
+    cate_to_num(DataFrame)
+    DataFrame['c_to_n'] = pd.factorize(DataFrame['country'])[0]
+    factorized_values = pd.factorize(DataFrame['c_to_n'])[0]
+    #unique_categories = pd.factorize(DataFrame['c_to_n'])[1]
+    unique_categories = DataFrame['country']
+    # 숫자를 문자열로 변환
+    converted_values = [unique_categories[index] for index in factorized_values]
+    # 결과를 새로운 열로 추가
+    DataFrame['n_to_c'] = converted_values
 
-# pivot table
-rating_matrix = places.pivot_table(index=column, columns='type', values='counts')
-# 결측치 제거
-rating_matrix = rating_matrix.fillna(0)
-rating_matrix.shape
+    return DataFrame
 
-num_to_country(places)
+num_to_country(place)
 num_to_country(user)
 
 ## 데이터 전처리 끝
@@ -90,12 +86,12 @@ def similar(user_matrix, place_matrix, k):
     user_similarity_sorted.reverse()
     
     # 가장 높은 유사도 k개 정렬하기
-    top_users_similarities = user_similarity_sorted[:k]
+    top_users_similarities = user_similarity_sorted[1:k+1]
     users = [i[0] for i in top_users_similarities]
 
-    converted_values = places['n_to_c'].to_list()
+    converted_values = place['n_to_c'].to_list()
     converted_list = [converted_values[index] for index in users]
     
     return converted_list
 
-print(similar(user, places, 2))
+print(similar(user, place, 2))
