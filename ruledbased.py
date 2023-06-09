@@ -51,19 +51,17 @@ resultt = [elem for sublst in result_L for elem in sublst.split(", ")]
 #뭐가 필요하냐면 비율 따져서 결과 도출하는거
 counted = Counter(resultt)
 
-def count():
-    c = Counter(resultt)
-    free = c['자유 여행형'] / 15
-    rest = c['휴양형'] / 12
-    art = c['문화 예술형'] / 12
-    exp = c['문화 체험형'] / 14
-    food = c['음식 여행형'] / 9
-    tam = c['모험가형'] / 10
+free = counted['자유 여행형'] / 15
+rest = counted['휴양형'] / 12
+art = counted['문화 예술형'] / 12
+exp = counted['문화 체험형'] / 14
+food = counted['음식 여행형'] / 9
+tam = counted['모험가형'] / 10
 
-    cate = ['free', 'rest', 'art', 'exp', 'food', 'tam']
-    numbers = [free, rest, art, exp, food, tam]
-    max_num = max(numbers)
-    max_in = numbers.index(max_num)
-    return cate[max_in]
+type = pd.read_csv("type.csv", encoding='cp949')
+cate = type['type']
+numbers = [free, rest, art, exp, food, tam]
+max_num = max(numbers)
+max_in = numbers.index(max_num)
 
-print(count)
+print(cate[max_in])

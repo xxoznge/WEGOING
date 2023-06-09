@@ -11,6 +11,24 @@ from category_mapping import *
 user = pd.DataFrame()
 places = pd.read_csv('places.csv', encoding='cp949')
 
+def cate_to_num(DataFrame):
+    categories = ['모험가형', '문화 체험형', '휴양형', '음식 여행형', '자유 여행형', '문화 예술형']
+    DataFrame['EncodedCategory'] = pd.factorize(DataFrame['type'])[0] + 1
+def num_to_country(DataFrame):
+    cate_to_num(DataFrame)
+    DataFrame['c_to_n'] = pd.factorize(DataFrame['country'])[0]
+    factorized_values = pd.factorize(DataFrame['c_to_n'])[0]
+    #unique_categories = pd.factorize(DataFrame['c_to_n'])[1]
+    unique_categories = DataFrame['country']
+    # 숫자를 문자열로 변환
+    converted_values = [unique_categories[index] for index in factorized_values]
+    # 결과를 새로운 열로 추가
+    DataFrame['n_to_c'] = converted_values
+
+    # print(DataFrame['n_to_c'])
+    return DataFrame
+
+
 # 사용자가 추천하는 여행지 입력받기
 name = input("당신의 별명을 알려주세요 ")
 str_num = input("몇 개의 여행지 추천을 하나요?? ")
@@ -30,18 +48,12 @@ user.to_csv("user_input.csv", encoding='cp949')
 column = ['country', 'city']
 column_values = places[column].values.tolist()
 duplicates = places.duplicated(subset=column)
-#counts = places[duplicates].groupby('country').size() + 1
 counts = places[duplicates].groupby(['country', 'city']).size() + 1
 
 # 중복 행 삭제
 places.drop_duplicates(subset=column, keep='first', inplace=True)
-#places["count"] = counts
 
 places.rename(columns={'Unnamed: 4' : 'counts'}, inplace=True)
-# places.to_csv("pl.csv", encoding='cp949')
-# # 중복 행 개수 및 리스트 출력
-# print("중복 행 개수:")
-# print(counts)
 
 # pivot table
 rating_matrix = places.pivot_table(index=column, columns='type', values='counts')
@@ -51,7 +63,6 @@ rating_matrix.shape
 
 num_to_country(places)
 num_to_country(user)
-#places.to_csv("pp.csv", encoding='cp949')
 
 ## 데이터 전처리 끝
 
@@ -71,7 +82,6 @@ def similar(user_matrix, place_matrix, k):
     other_users_list = other_users.index.tolist()
     
     # 인덱스/유사도로 이뤄진 딕셔너리 생성
-    # dict(zip()) -> {'other_users_list1': similarities, 'other_users_list2': similarities}
     user_similarity = dict(zip(other_users_list, similarities))
     
     # 딕셔너리 정렬
