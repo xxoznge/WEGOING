@@ -3,6 +3,8 @@ import pandas as pd
 import ast as ast
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from collections import Counter
+
 
 app = Flask(__name__)
 
@@ -45,7 +47,7 @@ def process_data():
     outputName = output["여행지"]
 
     for row in outputName:
-        json_output = {'id':'', 'travelPastName' : row}
+        json_output = {'travelPastName' : row}
         print(row)
 
     return jsonify(json_output)
@@ -55,4 +57,9 @@ def process_data():
     # finaloutput=json_output.to_json(orient='records')
     
 
-
+    print(outputName.values)
+    outputList = outputName.values
+    
+    # json 파일로 변환하기
+    json_output=outputName.to_json(orient='records')
+    return jsonify(json_output)
