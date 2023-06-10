@@ -43,11 +43,16 @@ def process_data():
 
     # 데이터프레임 -> 배열
     outputName = output["여행지"]
-    print(outputName.values)
-    outputList = outputName.values
+
+    for row in outputName:
+        json_output = {'id':'', 'travelPastName' : row}
+        print(row)
+
+    return jsonify(json_output)
+
     
     # json 파일로 변환하기
-    json_output=outputName.to_json(orient='records')
-    return jsonify(json_output)
+    # finaloutput=json_output.to_json(orient='records')
+    
 
 

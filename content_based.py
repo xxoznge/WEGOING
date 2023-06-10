@@ -20,7 +20,7 @@ similarity_관광자원 = cosine_similarity(c_vector_관광자원,c_vector_관�
 # 여행지 추천 사용자 함수 생성
 # 여행지 입력 > 관광자원이 같은 여행지 추천
 
-def recommend_travel_list(df, 여행지, top =2):
+def recommend_travel_list(df, 여행지, top =3):
   target_travel_index = df[df['여행지']==여행지].index.values
 
   sim_index = similarity_관광자원[target_travel_index,:top].reshape(-1)
