@@ -1,0 +1,3 @@
+EncodedCategory = type
+c_to_n = 나라를 숫자로
+n_to_c = 숫자를 나라로

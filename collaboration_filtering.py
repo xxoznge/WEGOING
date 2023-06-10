@@ -44,18 +44,17 @@ place.rename(columns={'Unnamed: 4' : 'counts'}, inplace=True)
 def cate_to_num(DataFrame):
     categories = ['모험가형', '문화 체험형', '휴양형', '음식 여행형', '자유 여행형', '문화 예술형']
     DataFrame['EncodedCategory'] = pd.factorize(DataFrame['type'])[0] + 1
-def num_to_country(DataFrame):
-    cate_to_num(DataFrame)
-    DataFrame['c_to_n'] = pd.factorize(DataFrame['country'])[0]
-    factorized_values = pd.factorize(DataFrame['c_to_n'])[0]
-    #unique_categories = pd.factorize(DataFrame['c_to_n'])[1]
-    unique_categories = DataFrame['country']
-    # 숫자를 문자열로 변환
-    converted_values = [unique_categories[index] for index in factorized_values]
-    # 결과를 새로운 열로 추가
-    DataFrame['n_to_c'] = converted_values
+def factorize_columns(dataframe, columns):
+    for column in columns:
+        dataframe[column + '_encoded'] = pd.factorize(dataframe[column])[0]
+        dataframe[column + '_decoded'] = dataframe[column].copy()
+        dataframe[column] = dataframe[column + '_encoded']
+    return dataframe
 
-    return DataFrame
+def num_to_country(dataframe):
+    dataframe = factorize_columns(dataframe, ['country', 'city'])
+    return dataframe
+
 
 num_to_country(place)
 num_to_country(user)
