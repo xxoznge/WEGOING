@@ -13,25 +13,25 @@ def index():
 
 @app2.route("/process_data", methods=["GET"])
 def process_data():
-    # 데이터 전처리
+    ## 데이터 전처리
     qna = pd.read_csv('qna.csv', encoding='cp949')
     qna = qna.fillna('0')
     qna['results'] = qna['result1'] + ', ' + qna['result2'] + ', ' + qna['result3']
     qna = qna.drop(['result1', 'result2', 'result3'], axis=1)
 
-    # 답변을 abcd로 바꾸기
+    ## 답변을 abcd로 바꾸기
     a, b, c, d = abcd()
 
-    # 사용자가 선택한 내용을 저장한 csv
+    ## 사용자가 선택한 내용을 저장한 csv
     ch = pd.read_csv('selected_options.csv', encoding='cp949')
 
-    # 필요한 리스트 생성
+    ## 필요한 리스트 생성
     result_list = ['0'] * 13
     resultt = ['0'] * 13
 
-    def question(q_num):  # 알고리즘
-        num = q_num * 4  # 행 인덱스
-        ques = qna[num:num + 4]  # 관련 질문 행 4개
+    def question(q_num):  ## 알고리즘
+        num = q_num * 4  ## 행 인덱스
+        ques = qna[num:num + 4]  ## 관련 질문 행 4개
 
         if ch['choose'][q_num] == qna['answer'][num]:
             result_list[q_num] = qna['results'][num]
@@ -44,14 +44,14 @@ def process_data():
 
         return result_list
 
-    # 결과 리스트
+    ## 결과 리스트
     for i in range(0, 13):
         question(i)
         result_L = [i.replace('0', '').strip(', ') for i in result_list]
-        # 결과를 하나하나 분리
+        ## 결과를 하나하나 분리
     resultt = [elem for sublst in result_L for elem in sublst.split(", ")]
 
-    # 뭐가 필요하냐면 비율 따져서 결과 도출하는거
+    ## 뭐가 필요하냐면 비율 따져서 결과 도출하는거
     counted = Counter(resultt)
 
     free = counted['자유 여행형'] / 15

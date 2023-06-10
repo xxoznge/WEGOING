@@ -55,7 +55,6 @@ def num_to_country(dataframe):
     dataframe = factorize_columns(dataframe, ['country', 'city'])
     return dataframe
 
-
 num_to_country(place)
 num_to_country(user)
 

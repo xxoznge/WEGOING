@@ -1,19 +1,19 @@
-user_id,type,country,city,
-candy,문화 체험형,일본,교토,3
-banana,문화 체험형,이탈리아,로마,3
-banana,휴양형,미국,하와이,2
-anna,음식 여행형,태국,치앙마이,5
-anna,휴양형,인도네시아,발리,2
-chocolate,휴양형,태국,코사무이,3
-chocolate,음식 여행형,이탈리아,밀라노,3
-deli,문화 체험형,일본,교토,
-deli,문화 체험형,이탈리아,로마,
-elephant,휴양형,미국,하와이,
-fanta,음식 여행형,태국,치앙마이,
-gigel,휴양형,인도네시아,발리,
-gigel,휴양형,태국,코사무이,
-haha,음식 여행형,이탈리아,밀라노,
-ipuonly,문화 체험형,이탈리아,로마,
-juliet,휴양형,태국,코사무이,
-kelly,음식 여행형,이탈리아,밀라노,
-lemmon,문화 체험형,일본,교토,
+user_id,type,country,city
+candy,문화 체험형,일본,교토
+banana,문화 체험형,이탈리아,로마
+banana,휴양형,미국,하와이
+anna,음식 여행형,태국,치앙마이
+anna,휴양형,인도네시아,발리
+chocolate,휴양형,태국,코사무이
+chocolate,음식 여행형,이탈리아,밀라노
+deli,문화 체험형,일본,교토
+deli,문화 체험형,이탈리아,로마
+elephant,휴양형,미국,하와이
+fanta,음식 여행형,태국,치앙마이
+gigel,휴양형,인도네시아,발리
+gigel,휴양형,태국,코사무이
+haha,음식 여행형,이탈리아,밀라노
+ipuonly,문화 체험형,이탈리아,로마
+juliet,휴양형,태국,코사무이
+kelly,음식 여행형,이탈리아,밀라노
+lemmon,문화 체험형,일본,교토
