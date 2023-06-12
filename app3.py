@@ -46,10 +46,10 @@ def preprocess_data():
     user = pd.read_csv('user_input.csv', encoding='cp949')
     
     ## A에만 있는 행 추출
-    df_only_A = user[~user['city'].isin(places['city'])]
+    df__A = user['city']
     
-    ## B에 A에만 있는 행 추가
-    place = pd.concat([places, df_only_A], ignore_index=True)
+    ## B에 A 행 추가
+    place = pd.concat([places, df__A], ignore_index=True)
 
     # 중복 행 개수 계산하여 개수 열 채우기 - place
     duplicates = place.duplicated(subset=[ 'city'])
@@ -62,8 +62,6 @@ def preprocess_data():
     for i in range (0,len(user)):
         user.loc[i, 'count'] = i+1
 
-    place.to_csv('ccc.csv',encoding='cp949',index=False)
-    user.to_csv('uuu.csv',encoding='cp949',index=False)
     return place, user
 
 @app3.route('/recommend', methods=['POST'])
@@ -95,8 +93,6 @@ def recommend():
     # 추천 결과 반환
     recommendations = top_items[['country', 'city']].to_dict(orient='records')
     return jsonify({"recommendations": recommendations})
-
-
 
 if __name__ == '__main__':
     app3.run()
