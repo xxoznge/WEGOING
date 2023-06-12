@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, json
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import operator
+import sqlite3
 ################################################################collaboration_filtering################################################################
 app3 = Flask(__name__)
 
@@ -15,8 +15,6 @@ def submit_user_input():
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
-    ## 데이터프레임 생성
-    user = pd.DataFrame(columns=['user_id', 'type', 'country', 'city'])
     for item in data:
         if isinstance(item, dict):
             name = item.get('name')
@@ -38,13 +36,15 @@ def submit_user_input():
 
     ## 데이터프레임을 CSV 파일로 저장
     user.to_csv('user_input.csv', encoding='cp949', index=False)
-    ## return jsonify({'message': 'User input submitted successfully', 'data': user.to_json()})
     return jsonify({'message': 'User input submitted successfully'})
 
 def preprocess_data():
     places = pd.read_csv('places.csv', encoding='cp949')
     user = pd.read_csv('user_input.csv', encoding='cp949')
     
+    pla = sqlite3.connect('place.db')
+    user.to_sql('my_place', pla, if_exists='append', index=False)
+
     ## A에만 있는 행 추출
     df__A = user['city']
     
@@ -61,7 +61,7 @@ def preprocess_data():
     user['count'] = 0
     for i in range (0,len(user)):
         user.loc[i, 'count'] = i+1
-
+    
     return place, user
 
 @app3.route('/recommend', methods=['POST'])
