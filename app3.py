@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import sqlite3
+import requests
 ################################################################collaboration_filtering################################################################
 app3 = Flask(__name__)
 
@@ -14,13 +15,14 @@ def submit_user_input():
     ## 입력값 확인
     if not data:
         return jsonify({'error': 'No data provided'}), 400
-
+    response = requests.get("http://localhost:5000")
+    type_result = response.text.strip()
     for item in data:
         if isinstance(item, dict):
             name = item.get('name')
             str_num = item.get('num')
             num = int(str_num)
-            types = item.get('types')
+            types = type_result
 
             for i in range(num):
                 country = item.get('country')
