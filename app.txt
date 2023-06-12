@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
+import numpy as np
 import pandas as pd
 from collections import Counter
 
@@ -10,35 +11,35 @@ app2 = Flask(__name__)
 def index():
     return "Success"
 
-@app2.route("/process_data", methods=["POST"])
+@app2.route("/process_data", methods=["GET"])
 def process_data():
-    data = request.get_json()
-
     ## 데이터 전처리
     qna = pd.read_csv('qna.csv', encoding='cp949')
-    ch = pd.read_csv('selected_options.csv', encoding='cp949')
     qna = qna.fillna('0')
     qna['results'] = qna['result1'] + ', ' + qna['result2'] + ', ' + qna['result3']
     qna = qna.drop(['result1', 'result2', 'result3'], axis=1)
 
+    ## 답변을 abcd로 바꾸기
+    a, b, c, d = abcd()
+
+    ## 사용자가 선택한 내용을 저장한 csv
+    ch = pd.read_csv('selected_options.csv', encoding='cp949')
+
     ## 필요한 리스트 생성
     result_list = ['0'] * 13
     resultt = ['0'] * 13
-    result_in = ['0'] * 13
-    ## 답변을 abcd로 바꾸기
-    abcd()
-    an_to_abcd()
-    ch = pd.read_csv('result_in.csv', encoding='cp949')
 
     def question(q_num):  ## 알고리즘
         num = q_num * 4  ## 행 인덱스
-        if ch['result_in'][q_num] == qna['answer'][num]:
+        ques = qna[num:num + 4]  ## 관련 질문 행 4개
+
+        if ch['choose'][q_num] == qna['answer'][num]:
             result_list[q_num] = qna['results'][num]
-        elif ch['result_in'][q_num] == qna['answer'][num + 1]:
+        elif ch['choose'][q_num] == qna['answer'][num + 1]:
             result_list[q_num] = qna['results'][num]
-        elif ch['result_in'][q_num] == qna['answer'][num + 2]:
+        elif ch['choose'][q_num] == qna['answer'][num + 2]:
             result_list[q_num] = qna['results'][num]
-        elif ch['result_in'][q_num] == qna['answer'][num + 3]:
+        elif ch['choose'][q_num] == qna['answer'][num + 3]:
             result_list[q_num] = qna['results'][num]
 
         return result_list

@@ -90,16 +90,16 @@ class MainActivity : AppCompatActivity() {
                 question = "여행지를 선택할 때 가장 중요한 것은 무엇인가요?"
             }
             R.id.buttonOption4 -> {
-                option = ""
+                option = "쇼핑과 엔터테인먼트의 풍부함"
                 question = "여행지를 선택할 때 가장 중요한 것은 무엇인가요?"
             }
             //5
             R.id.buttonOption1 -> {
-                option = "봄의 꽃길을 걷으며 청량한 공기를 마시는 것"
+                option = "봄의 꽃길을 걸으며 청량한 공기를 마시는 것"
                 question = "여행을 할 때 가장 선호하는 계절은 무엇인가요?"
             }
             R.id.buttonOption2 -> {
-                option = "여름 바다에서 해수욕을 즐기고 캠핑을 하는 것"
+                option = "여름 바다와 해수욕을 즐기고 캠핑을 하는 것"
                 question = "여행을 할 때 가장 선호하는 계절은 무엇인가요?"
             }
             R.id.buttonOption3 -> {
@@ -146,11 +146,11 @@ class MainActivity : AppCompatActivity() {
             }
             //8
             R.id.buttonOption1 -> {
-                option = "야외 활동(예: 트레킹, 등산, 서핑 등)"
+                option = "야외 활동 (트레킹, 등산, 서핑 등)"
                 question = "여행중에 가장 좋아하는 활동은?"
             }
             R.id.buttonOption2 -> {
-                option = "문화 관광(예: 박물관, 유적지, 사원, 궁전 등)"
+                option = "문화 관광 (박물관, 유적지, 사원, 궁전 등)"
                 question = "여행중에 가장 좋아하는 활동은?"
             }
             R.id.buttonOption3 -> {

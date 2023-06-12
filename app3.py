@@ -10,7 +10,7 @@ app3 = Flask(__name__)
 def submit_user_input():
     ## 사용자로부터 입력 받기
     data = request.json
-
+    user = pd.DataFrame()
     ## 입력값 확인
     if not data:
         return jsonify({'error': 'No data provided'}), 400
@@ -42,8 +42,8 @@ def preprocess_data():
     places = pd.read_csv('places.csv', encoding='cp949')
     user = pd.read_csv('user_input.csv', encoding='cp949')
     
-    pla = sqlite3.connect('place.db')
-    user.to_sql('my_place', pla, if_exists='append', index=False)
+    pla = sqlite3.connect('place.db3')
+    user.to_sql('user_table', pla, if_exists='append', index=False)
 
     ## A에만 있는 행 추출
     df__A = user['city']
