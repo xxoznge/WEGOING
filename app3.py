@@ -15,8 +15,8 @@ def submit_user_input():
     ## 입력값 확인
     if not data:
         return jsonify({'error': 'No data provided'}), 400
-    response = requests.get("http://localhost:5000")
-    type_result = response.text.strip()
+    with open("result.txt", "r") as file:
+        type_result = file.read()
     for item in data:
         if isinstance(item, dict):
             name = item.get('name')
@@ -38,22 +38,20 @@ def submit_user_input():
 
     ## 데이터프레임을 CSV 파일로 저장
     user.to_csv('user_input.csv', encoding='cp949', index=False)
+    places = pd.read_csv('places.csv', encoding='cp949')
+    pla = sqlite3.connect('place.db3')
+    user.to_sql('place_table', pla, if_exists='append', index=False)
+
+    ## B에 A 행 추가
+    place = pd.concat([places, user], ignore_index=True)
+    place.to_csv('pal.csv',encoding='cp949',index=False)
     return jsonify({'message': 'User input submitted successfully'})
 
 def preprocess_data():
-    places = pd.read_csv('places.csv', encoding='cp949')
+    place = pd.read_csv('pal.csv', encoding='cp949')
     user = pd.read_csv('user_input.csv', encoding='cp949')
-    
-    pla = sqlite3.connect('place.db3')
-    user.to_sql('user_table', pla, if_exists='append', index=False)
 
-    ## A에만 있는 행 추출
-    df__A = user['city']
-    
-    ## B에 A 행 추가
-    place = pd.concat([places, df__A], ignore_index=True)
-
-    # 중복 행 개수 계산하여 개수 열 채우기 - place
+    # 중복 행 개수 계산하여 개수 열 채우기 - placea
     duplicates = place.duplicated(subset=[ 'city'])
     grouped_counts = place.groupby(['city']).size().reset_index(name='count')
     place = pd.merge(place, grouped_counts, on=['city'], how='left')
@@ -64,6 +62,8 @@ def preprocess_data():
     for i in range (0,len(user)):
         user.loc[i, 'count'] = i+1
     
+    place.to_csv('plapla.csv',encoding='cp949',index=False)
+    place = pd.read_csv('plapla.csv',encoding='cp949')
     return place, user
 
 @app3.route('/recommend', methods=['POST'])
@@ -71,11 +71,6 @@ def recommend():
     data = request.json
     k = data.get('k')
     place, user = preprocess_data()
-
-    # 데이터프레임 샘플링
-    first_df_rows = len(place)
-    random_number = np.random.randint(0, 10)
-    user_sampled = user.sample(n=first_df_rows, replace=True, random_state=random_number)
 
     # 유사도 계산
     # 데이터프레임 샘플링
@@ -86,6 +81,7 @@ def recommend():
     # 유사도 계산
     use = user_sampled['count'].values.reshape(1, -1)
     pl = place['count'].values.reshape(1, -1)
+
     item_similarities = cosine_similarity(use, pl)
     item_similarities = item_similarities.flatten()
 
@@ -94,7 +90,9 @@ def recommend():
 
     # 추천 결과 반환
     recommendations = top_items[['country', 'city']].to_dict(orient='records')
-    return jsonify({"recommendations": recommendations})
+    item_similarities = item_similarities.tolist()  # ndarray를 리스트로 변환
+
+    return jsonify({"recommendations": recommendations, "item_similarities": item_similarities})
 
 if __name__ == '__main__':
     app3.run()

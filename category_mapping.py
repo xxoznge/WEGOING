@@ -2,8 +2,8 @@ import pandas as pd
 
 qna = pd.read_csv('qna.csv', encoding='cp949')
 places = pd.read_csv('places.csv', encoding='cp949')
-user = pd.read_csv('user.csv', encoding='cp949')
-#user = pd.read_csv('user_input.csv', encoding='cp949')
+#user = pd.read_csv('user.csv', encoding='cp949')
+user = pd.read_csv('user_input.csv', encoding='cp949')
 #an_input = pd.read_csv('selected_options.csv', encoding='cp949')
 
 #abcd 리스트
@@ -51,8 +51,7 @@ def num_to_country(DataFrame):
     return DataFrame
 
 ## 필요한 리스트 생성
-an = pd.read_csv('result.csv',encoding='cp949')
-result_in = ['0'] * (len(an))
+result_in = ['0'] * 8
 
 def an_to_abcd(DataFrame):
     abcd()
@@ -60,17 +59,15 @@ def an_to_abcd(DataFrame):
     for i in range(0,len(DataFrame)):
         q_num = i  # q_num 값을 i로 설정
         num = q_num * 4  ## 행 인덱스
-        if DataFrame['option'][q_num] == qna['answers'][num]:
+        if DataFrame['option3'][q_num] == qna['answers'][num]:
             result_in[q_num] = qna['answer'][num]
-        elif DataFrame['option'][q_num] == qna['answers'][num + 1]:
+        elif DataFrame['option3'][q_num] == qna['answers'][num + 1]:
             result_in[q_num] = qna['answer'][num + 1]
-        elif DataFrame['option'][q_num] == qna['answers'][num + 2]:
+        elif DataFrame['option3'][q_num] == qna['answers'][num + 2]:
             result_in[q_num] = qna['answer'][num + 2]
-        elif DataFrame['option'][q_num] == qna['answers'][num + 3]:
+        elif DataFrame['option3'][q_num] == qna['answers'][num + 3]:
             result_in[q_num] = qna['answer'][num + 3]
 
     result_in_df = pd.DataFrame({'result_in': result_in})
     result_in_df.to_csv('result_in.csv', encoding='cp949', index=False)
     return result_in
-
-print(an_to_abcd(an))

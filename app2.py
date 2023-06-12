@@ -1,15 +1,9 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 import pandas as pd
 from collections import Counter
-
 from category_mapping import *
 
 app2 = Flask(__name__)
-
-@app2.route("/")
-def get_result():
-    type_result = process_data.result()
-    return render_template("type_result.html", result=type_result)
 
 @app2.route("/process_data", methods=["POST"])
 def process_data():
@@ -17,40 +11,43 @@ def process_data():
 
     ## 데이터 전처리
     qna = pd.read_csv('qna.csv', encoding='cp949')
-    #an = pd.read_csv('selected_options.csv', encoding='cp949')
-    an = pd.read_csv('result.csv', encoding='cp949')
-    qna = qna.fillna('0')
-    qna['results'] = qna['result1'] + ', ' + qna['result2'] + ', ' + qna['result3']
-    qna = qna.drop(['result1', 'result2', 'result3'], axis=1)
+    an = pd.read_csv('selected_options.csv', encoding='cp949')
+    #an = pd.read_csv('result.csv', encoding='cp949')
+    
     ## 필요한 리스트 생성
     result_list = ['0'] * (len(an))
     resultt = ['0'] * (len(an))
     result_in = ['0'] * (len(an))
+    
     ## 답변을 abcd로 바꾸기
-
     an_to_abcd(an)
     ch = pd.read_csv('result_in.csv', encoding='cp949')
+    qna = pd.read_csv('qqna.csv', encoding='cp949')
+    qna = qna.fillna('0')
+    qna['results'] = qna['result1'] + ', ' + qna['result2'] + ', ' + qna['result3']
+    qna = qna.drop(['result1', 'result2', 'result3'], axis=1)
 
     def question(q_num):  ## 알고리즘
         num = q_num * 4  ## 행 인덱스
         if ch['result_in'][q_num] == qna['answer'][num]:
             result_list[q_num] = qna['results'][num]
         elif ch['result_in'][q_num] == qna['answer'][num + 1]:
-            result_list[q_num] = qna['results'][num]
+            result_list[q_num] = qna['results'][num + 1]
         elif ch['result_in'][q_num] == qna['answer'][num + 2]:
-            result_list[q_num] = qna['results'][num]
+            result_list[q_num] = qna['results'][num + 2]
         elif ch['result_in'][q_num] == qna['answer'][num + 3]:
-            result_list[q_num] = qna['results'][num]
-
+            result_list[q_num] = qna['results'][num + 3]
+        print(result_list)
         return result_list
 
     ## 결과 리스트
     for i in range(0, (len(ch))):
         question(i)
-        result_L = [i.replace('0', '').strip(', ') for i in result_list]
+    result_L = [i.replace('0', '').strip(', ') for i in result_list]
+
         ## 결과를 하나하나 분리
     resultt = [elem for sublst in result_L for elem in sublst.split(", ")]
-
+ 
     ## 뭐가 필요하냐면 비율 따져서 결과 도출하는거
     counted = Counter(resultt)
 
@@ -68,8 +65,10 @@ def process_data():
     max_in = numbers.index(max_num)
 
     result = cate[max_in]
+    with open("result.txt", "w") as f:
+        f.write(result)
     print(result)
-
+    print(numbers)
     return jsonify({"result": result})
 
 if __name__ == '__main__':
